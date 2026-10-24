@@ -1,0 +1,16 @@
+# This repository lives in the game's install folder: track only the two mods' source and docs, never the game.
+/*
+!/.gitignore
+!/README.md
+!/_ArcadeEndless/
+!/_NightmarePOC/
+
+# Built or generated: paks hold game data, dist/cache holds the game's fonts
+dist/
+release/
+build/
+__pycache__/
+*.exe
+*.exe.old
+*.pak
+*.spec
