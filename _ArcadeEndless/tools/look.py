@@ -92,7 +92,8 @@ class Look:
         s.configure("Muted.TLabel", foreground=C.muted, font=f["small"])
         s.configure("Section.TLabel", foreground=C.veil, font=f["section"])
         s.configure("Value.TLabel", foreground=C.veil, font=f["bold"])
-        s.configure("Notice.TLabel", background=C.bg, foreground=C.veil, font=f["bold"])  # "Installed", on the window background
+        s.configure("Notice.TLabel", background=C.bg, foreground=C.veil, font=f["bold"])
+        s.configure("Warn.TLabel", background=C.bg, foreground=C.blood, font=(f["bold"][0], f["bold"][1] + 2))  # "Installed", on the window background
         s.configure("Summary.TLabel", foreground=C.text, font=f["body"])
         s.configure("TSeparator", background=C.line)
 

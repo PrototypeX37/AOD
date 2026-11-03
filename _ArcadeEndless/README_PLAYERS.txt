@@ -2,6 +2,13 @@ ARCADE ENDLESS + NIGHTMAREPOC
 Mods for Age of Darkness: Final Stand, created by Lunar (76561198073513480)
 ======================================================================
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!  MULTIPLAYER: EVERY PLAYER NEEDS THE EXACT SAME MODS AND SETTINGS   !!
+!!  TO SYNC. Same mods, same settings, same match codes (top right of  !!
+!!  the app), same game version. Otherwise the match falls out of      !!
+!!  sync and ends.                                                     !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 WHAT YOU GET
 
 Arcade Endless

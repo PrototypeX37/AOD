@@ -264,8 +264,10 @@ class App:
         f.grid(row=2, column=0, sticky="we")
         f.columnconfigure(0, weight=1)
         self.status = tk.StringVar()
-        ttk.Label(f, textvariable=self.status, style="Bar.TLabel", justify="left").grid(row=0, column=0, sticky="w")
-        ttk.Button(f, text="Open mods folder", command=self.open_mods).grid(row=0, column=1, sticky="e")
+        ttk.Label(f, text=SYNC_WARNING, style="Warn.TLabel").grid(row=0, column=0, columnspan=2, sticky="w",
+                                                                  pady=(0, self.look.px(4)))
+        ttk.Label(f, textvariable=self.status, style="Bar.TLabel", justify="left").grid(row=1, column=0, sticky="w")
+        ttk.Button(f, text="Open mods folder", command=self.open_mods).grid(row=1, column=1, sticky="e")
 
     # ------------------------------------------------------------------ settings
     def load(self, s):
@@ -671,6 +673,8 @@ class App:
         os.startfile(folder if os.path.isdir(folder) else os.path.dirname(folder))
 
 
+SYNC_WARNING = ("⚠ MULTIPLAYER: EVERY PLAYER NEEDS THE EXACT SAME MODS AND SETTINGS TO SYNC. "
+                "Compare the match codes top right before you start.")
 UNIT_WORDS = {"villagers": "population", "seconds": "train time"}
 HERO_WORDS = {"regen": "health regen", "melee": "melee damage", "special": "special damage", "ranged": "ranged damage",
               "shred": "armour shred", "speed": "move speed", "revive": "revive time"}

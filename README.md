@@ -4,6 +4,9 @@ Two mods for **Age of Darkness: Final Stand**, created by Lunar (765611980735134
 
 **[Download the latest release](https://github.com/PrototypeX37/AOD/releases/latest)** · Windows only · mostly untested: back up your saves.
 
+> [!WARNING]
+> **MULTIPLAYER: EVERY PLAYER NEEDS THE EXACT SAME MODS AND SETTINGS TO SYNC.** Same mods, same settings, same match codes (top right of the app) and the same game version, or the match falls out of sync and ends.
+
 ## Arcade Endless
 
 Survival and multiplayer runs that don't stop at day 45. By default a run lasts until a Final Night on day 181, and every night gets harder.

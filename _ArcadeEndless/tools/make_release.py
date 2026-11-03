@@ -64,6 +64,14 @@ def write_zip(path, files, readme, readme_name="README.txt"):
     print(f"Wrote {path} ({os.path.getsize(path) / 1e6:.2f} MB)\n")
 
 
+BOX = """!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!  MULTIPLAYER: EVERY PLAYER NEEDS THE EXACT SAME MODS AND SETTINGS   !!
+!!  TO SYNC. Same mods, same settings, same match codes (top right of  !!
+!!  the app), same game version. Otherwise the match falls out of      !!
+!!  sync and ends.                                                     !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"""
+
 HERO_WORDS = {"health": "health", "regen": "health regen", "armour": "armour", "melee": "melee damage",
               "special": "special damage", "ranged": "ranged damage", "shred": "armour shred", "speed": "move speed",
               "revive": "revive time"}
@@ -151,8 +159,8 @@ def nightmare_lines(s):
 
 def friends_guide(arcade, nm):
     out = ["PLAYING WITH LUNAR'S MODS", "=" * 70, "",
-           "Every player in a multiplayer match needs exactly the same mods and settings,",
-           "or the match falls out of sync. This sets your game up to match.", "",
+           *BOX.splitlines(), "",
+           "This sets your game up to match Lunar's.", "",
            "Mods for these games:"]
     if nm:
         out.append(f"  NightmarePOC: ON (match code {nm[1]})")
