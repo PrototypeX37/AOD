@@ -743,8 +743,8 @@ class NightmarePanel:
         ttk.Checkbutton(f, text="Numpad + resource hotkey", variable=self.hotkey, state=state
                         ).grid(row=3, column=0, columnspan=2, sticky="w")
         ttk.Label(f, style="Muted.TLabel", justify="left", wraplength=px(320), text=(
-            "In a match, Numpad + gives you (only you) +10,000 food and villagers and fills your wood, stone, iron and "
-            "essence. Works in multiplayer when everyone has the same settings.")
+            "In a match, Numpad + (for you only) tops your food and villagers up to 10,000, gives +10,000 gold and fills "
+            "your wood, stone, iron and essence. Works in multiplayer when everyone has the same settings.")
                   ).grid(row=4, column=0, columnspan=2, sticky="w", pady=(px(4), px(10)))
         ttk.Checkbutton(f, text="Multiplayer map seeds", variable=self.seeds, state=state
                         ).grid(row=5, column=0, columnspan=2, sticky="w")

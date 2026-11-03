@@ -48,7 +48,7 @@ The app is dressed in the game's own look. The logo, the Nightmare horde banner 
 6. **The NightmarePOC tab.** NightmarePOC is a second mod by the same author:
    - the Volatists can train Nightmares, at costs you set (gold, wood, stone, iron, food, population, train time, upkeep);
    - heroes can be tuned, using their real stats;
-   - an optional **Numpad + resource hotkey** gives the player who presses it 10,000 food and villagers and fills their wood, stone, iron and essence, synced in multiplayer (an exe patch of its own);
+   - an optional **Numpad + resource hotkey** tops the presser's food and villagers up to 10,000, gives +10,000 gold and fills their wood, stone, iron and essence, synced in multiplayer (an exe patch of its own);
    - optional **multiplayer map seeds**: the host names the game `seed_12345` and the map is built for that seed, like Survival's seed box (an exe patch of its own; experimental, early test matches crashed or froze);
    - the hidden map-editor button comes back.
 

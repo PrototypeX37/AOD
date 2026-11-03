@@ -24,7 +24,7 @@ sys.path.insert(0, HERE)
 import home  # noqa: E402
 import make_exe  # noqa: E402
 
-VERSION = "1.1"
+VERSION = "1.2"
 GUIDE = os.path.join(home.MOD, "README_PLAYERS.txt")
 PYTHON_GUIDE = os.path.join(home.MOD, "README_PLAYERS_PYTHON.txt")
 RELEASE = os.path.join(home.MOD, "release")
@@ -139,8 +139,9 @@ def nightmare_lines(s):
                    for f in bm.HERO_FIELDS if (h[f] is not None if f == "armour" else h[f] != 1)]
         if changes:
             lines.append(f"{hero}: {', '.join(changes)}")
-    lines.append("Numpad + resource hotkey: " + ("ON. In a match, Numpad + gives the player who presses it (only them) "
-                                                 "10,000 food and villagers and fills their wood, stone, iron and essence."
+    lines.append("Numpad + resource hotkey: " + ("ON. In a match, Numpad + (for the player who presses it only) tops "
+                                                 "their food and villagers up to 10,000, gives +10,000 gold and fills "
+                                                 "their wood, stone, iron and essence."
                                                  if s.hotkey else "off"))
     lines.append("Multiplayer map seeds: " + ("ON. The host names the game \"seed_12345\" (letters, digits and _ only) "
                                               "and everyone's game builds that map. Experimental: of the first two test "

@@ -18,7 +18,7 @@ More: [`_ArcadeEndless/README.md`](_ArcadeEndless/README.md).
 
 - **The Volatists can train 8 Nightmares**, from Crawlers to Crushers, at the Barracks and Siege Workshop. Set each one's gold, wood, stone, iron, food, population, train time and upkeep.
 - **Heroes can be retuned**, using their real in-game stats: health, regen, armour, melee, special and ranged damage, armour shred, move speed, revive time.
-- **Numpad + resource hotkey** (optional): in a match, gives the player who presses it (only them) +10,000 food and villagers and fills their wood, stone, iron and essence. Synced in multiplayer.
+- **Numpad + resource hotkey** (optional): in a match, tops the presser's food and villagers up to 10,000 (only theirs), gives +10,000 gold and fills their wood, stone, iron and essence. Synced in multiplayer.
 - **Multiplayer map seeds** (optional, experimental): the host names the game `seed_12345` and everyone's game builds that seed's map, like Survival's seed box. In the first test matches one game crashed and one froze, so treat it as unfinished.
 - The main menu's hidden map editor button comes back.
 - Out of the box every setting is the game's own (heroes keep their vanilla stats). Custom settings travel as a code (`NP1-...`).
@@ -60,7 +60,7 @@ Only source code and docs. No game files: the app reads the player's installed g
 - **Reads** the game's own pak, `Achilles/Content/Paks/Achilles-WindowsNoEditor.pak`. It never writes to it.
 - **Writes** the mod paks it builds (`ArcadeEndless_P.pak`, `NightmarePOC_P.pak`) into `Achilles/Content/Paks/~mods/`, after checking each one with the validators in `tools/`.
 - **Arcade Endless:** changes 6 bytes in `Achilles/Binaries/Win64/Achilles-Win64-Shipping.exe` (one function that returns the game's 45-day length now returns 190), so the game prepares waves for the longer run. **Remove** puts the original bytes back.
-- **NightmarePOC, only with its resource hotkey on:** patches the same exe in four verified places, so Numpad + sends the developers' own synced "add resources" debug command and that command gives the sender 10,000 food and villagers and full wood, stone, iron and essence. A dead developer function holds the new code. **Remove** puts the original bytes back. See `_NightmarePOC/README.md`.
+- **NightmarePOC, only with its resource hotkey on:** patches the same exe in four verified places, so Numpad + sends the developers' own synced "add resources" debug command and that command tops the sender's food and villagers up to 10,000, adds 10,000 gold and fills wood, stone, iron and essence. A dead developer function holds the new code. **Remove** puts the original bytes back. See `_NightmarePOC/README.md`.
 - **NightmarePOC, only with multiplayer map seeds on:** patches the exe in three more verified places, so a multiplayer game named `seed_<text>` builds that seed's map live (normally multiplayer only loads pre-generated maps). Experimental: early test matches crashed or froze. **Remove** puts the original bytes back.
 - Before the first exe patch, either mod saves a full copy of the original exe beside it as `Achilles-Win64-Shipping.exe.arcade-backup`, and only from an unpatched exe. All the patches and that rule live in `tools/exe_patches.py` (an identical copy in each mod's tools).
 - Keeps its own working files (built paks, the game fonts it extracts for its look, the installed settings) in `_ArcadeEndless/dist/`.

@@ -15,9 +15,10 @@ NightmarePOC (optional, separate)
   - The Volatists can train 8 Nightmares (Crawlers up to Crushers) at the
     Barracks and Siege Workshop.
   - Set what each Nightmare costs, and each hero's stats.
-  - Optional Numpad + hotkey: gives you (only you) +10,000 food and
-    villagers and fills your wood, stone, iron and essence. Works in
-    multiplayer when everyone has the same settings.
+  - Optional Numpad + hotkey (for you only): tops your food and
+    villagers up to 10,000, gives +10,000 gold and fills your wood,
+    stone, iron and essence. Works in multiplayer when everyone has the
+    same settings.
   - Optional multiplayer map seeds: the host names the game
     "seed_12345" (letters, digits and _ only) and everyone gets that
     seed's map. Experimental: early test matches crashed or froze.

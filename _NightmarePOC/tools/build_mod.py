@@ -13,8 +13,8 @@ Changes, all data-only, applied to both Survival and multiplayer constants:
   3. Heroes: Settings.heroes scales each playable hero's health, health regen, damage (melee and special attacks,
      plus the projectiles their ranged attack fires), armour shred, move speed and revive time, and can set their
      armour. By default every hero keeps the game's own stats.
-  4. Resource hotkey (Settings.hotkey, off by default): Numpad + gives the player who presses it 10,000 food and
-     villagers and fills their wood, stone, iron and essence, synced in multiplayer. That part is an exe patch
+  4. Resource hotkey (Settings.hotkey, off by default): Numpad + tops the presser's food and villagers up to 10,000,
+     gives +10,000 gold and fills their wood, stone, iron and essence, synced in multiplayer. That part is an exe patch
      (tools/exe_patches.py, applied when NightmarePOC is installed); the pak only carries HOTKEY_MARKER, so the match
      code tells hotkey and no-hotkey installs apart.
   5. Multiplayer map seeds (Settings.seeds, off by default): the host names the game "seed_<text>" and the map is

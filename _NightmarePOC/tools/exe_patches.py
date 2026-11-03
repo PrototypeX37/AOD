@@ -24,7 +24,11 @@ How the hotkey works (game build 1.0.2.5; addresses are RVAs):
              use; food on hand = what farms give - what's in use (index 14 + type, which agent_database::
              add_maintenance / remove_maintenance keep up to date), food capacity = farms + the bonus. So both get
              +FOOD/+VILLAGERS on the bonus, and food's in-use count also drops by FOOD (from HOTKEY_VERSION 2; version 1
-             only raised food capacity).
+             only raised food capacity). From HOTKEY_VERSION 4 food and villagers are refilled to FOOD/VILLAGERS rather
+             than raised by them every press: villagers' bonus grows by what's missing up to VILLAGERS on hand, food's
+             bonus by what capacity lacks up to FOOD, and food in use drops by what's missing up to FOOD on hand (the
+             team's current values, index 0 + type, and capacity, index 7 + type, are last tick's, the same on every
+             PC). Version 4 also adds GOLD gold through world_resources::add.
   TICK       The player controllers' calls to the base Tick (AAchillesGameplayPlayerControllerBase::Tick) now call
              this: the base Tick, then, if WasInputKeyJustPressed(EKeys::Add), the developers' own create-and-queue
              sequence for CreateEnableDebugOptionsCommand(ADD_RESOURCES). Unreal's input only reports keys while the game
@@ -120,8 +124,9 @@ def days_site(data):
 
 
 # ---------------------------------------------------------------------------- hotkey (NightmarePOC)
-FOOD = 10_000        # food supply added per press
-VILLAGERS = 10_000   # villager supply added per press
+FOOD = 10_000        # food on hand after a press (versions 1-3: food supply added per press)
+VILLAGERS = 10_000   # villagers on hand after a press (versions 1-3: villager supply added per press)
+GOLD = 10_000        # gold added per press (from version 4)
 FILL = 100_000       # wood, stone, iron, essence: more than any storage cap, so add() fills each to its cap
 FIXED = 1024         # the simulation's 22.10 fixed point
 ADD_RESOURCES = 13   # DEBUG_OPTION
@@ -147,7 +152,8 @@ RESOURCE_DATA = 0x68     # world_resources -> int32 table, 63 per team
 TEAM_STRIDE = 63 * 4
 SUPPLY_FOOD, SUPPLY_VILLAGERS = (56 + 0) * 4, (56 + 4) * 4  # RESOURCE_TYPE FOOD 0, VILLAGER 4
 FOOD_IN_USE = (14 + 0) * 4
-HOTKEY_VERSION = 3  # older versions are recognised so they can be upgraded or removed
+CURRENT_FOOD, CURRENT_VILLAGERS, MAX_FOOD = 0 * 4, 4 * 4, (7 + 0) * 4
+HOTKEY_VERSION = 4  # older versions are recognised so they can be upgraded or removed
 ORIGINAL = {
     CAVE: zlib.decompress(base64.b85decode(
         "c-kFMO-lk%6n&!51i`oxf=I!E+C(i{7;X$q&crh$DqOe-CL$<;U<8ARa>i=72rm00(Kad4KImiBGFlWvL~UG{B(L}8Z0_aW!#(#LIA8F`I"
@@ -215,11 +221,12 @@ def resources_routine(rva, version=HOTKEY_VERSION):
     c.call(a["get_team_for_player"])
     c.raw("0fb6d8")                         # movzx ebx,al              team
     # FFixedResourceCost at [rsp+20h]: food, gold, iron, stone, villagers, wood, darkness (int32, 22.10 fixed)
-    c.imm32("c7442420", FOOD * FIXED)
-    c.imm32("c7442424", 0)                  # gold: unchanged
+    refill = version >= 4                   # food and villagers are refilled below instead of added here
+    c.imm32("c7442420", 0 if refill else FOOD * FIXED)
+    c.imm32("c7442424", GOLD * FIXED if refill else 0)  # gold: unchanged before version 4
     c.imm32("b8", FILL * FIXED)             # mov eax,FILL
     c.raw("89442428 8944242c")              # iron, stone
-    c.imm32("c7442430", VILLAGERS * FIXED)
+    c.imm32("c7442430", 0 if refill else VILLAGERS * FIXED)
     c.raw("89442434 89442438")              # wood, darkness
     c.imm32("488b8f", WORLD_RESOURCES)      # mov rcx,[rdi+660h]
     c.raw("8bd3 4c8d442420")                # mov edx,ebx; lea r8,[rsp+20h]
@@ -228,9 +235,22 @@ def resources_routine(rva, version=HOTKEY_VERSION):
     c.imm32("488b8f", WORLD_RESOURCES)      # mov rcx,[rdi+660h]
     c.raw("488b41" + f"{RESOURCE_DATA:02x}")  # mov rax,[rcx+68h]
     c.imm32("4869db", TEAM_STRIDE)          # imul rbx,rbx,0FCh          the team's block
-    changes = [(SUPPLY_FOOD, FOOD), (SUPPLY_VILLAGERS, VILLAGERS)] + ([(FOOD_IN_USE, -FOOD)] if version >= 2 else [])
-    for slot, amount in changes:
-        c.b += bytes.fromhex("818418") + struct.pack("<ii", slot, amount * FIXED)  # add dword [rax+rbx+slot],amount
+    if refill:
+        c.raw("488d0418")                   # lea rax,[rax+rbx]
+        # (target, the value it's compared with, the slot changed, add 01 or sub 29): edx = target - value; if > 0,
+        # slot += edx (or -=)
+        for target, value, slot, op, name in ((VILLAGERS, CURRENT_VILLAGERS, SUPPLY_VILLAGERS, "01", "v"),
+                                              (FOOD, MAX_FOOD, SUPPLY_FOOD, "01", "cap"),
+                                              (FOOD, CURRENT_FOOD, FOOD_IN_USE, "29", "food")):
+            c.imm32("ba", target * FIXED)   # mov edx,target
+            c.raw(f"2b50{value:02x}")       # sub edx,[rax+value]
+            c.jcc(0x7E, name)               # jle: already there
+            c.imm32(op + "90", slot)        # add/sub [rax+slot],edx
+            c.label(name)
+    else:
+        changes = [(SUPPLY_FOOD, FOOD), (SUPPLY_VILLAGERS, VILLAGERS)] + ([(FOOD_IN_USE, -FOOD)] if version >= 2 else [])
+        for slot, amount in changes:
+            c.b += bytes.fromhex("818418") + struct.pack("<ii", slot, amount * FIXED)  # add dword [rax+rbx+slot],amount
     c.raw("4883c448 5f 5b c3")              # add rsp,48h; pop rdi; pop rbx; ret
     return bytes(c.b)
 
