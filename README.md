@@ -10,7 +10,7 @@ Survival and multiplayer runs that don't stop at day 45. By default a run lasts 
 
 - Presets (Tough, Hard, Brutal, Apocalypse), or your own settings: how fast waves grow, Death Night days, surge nights, the Final Night.
 - A table of every night: see and edit exactly which units each night brings before you play.
-- Settings travel as a short code (`AE2-...`), so friends can install the same run.
+- Custom settings travel as a short code (`AE2-...`), so friends can install the same run.
 
 More: [`_ArcadeEndless/README.md`](_ArcadeEndless/README.md).
 
@@ -21,7 +21,7 @@ More: [`_ArcadeEndless/README.md`](_ArcadeEndless/README.md).
 - **Numpad + resource hotkey** (optional): in a match, gives the player who presses it (only them) +10,000 food and villagers and fills their wood, stone, iron and essence. Synced in multiplayer.
 - **Multiplayer map seeds** (optional, experimental): the host names the game `seed_12345` and everyone's game builds that seed's map, like Survival's seed box. In the first test matches one game crashed and one froze, so treat it as unfinished.
 - The main menu's hidden map editor button comes back.
-- Settings travel as a code (`NP1-...`).
+- Out of the box every setting is the game's own (heroes keep their vanilla stats). Custom settings travel as a code (`NP1-...`).
 
 More: [`_NightmarePOC/README.md`](_NightmarePOC/README.md).
 
@@ -31,7 +31,7 @@ More: [`_NightmarePOC/README.md`](_NightmarePOC/README.md).
 2. In Steam, right-click **Age of Darkness: Final Stand** > **Manage** > **Browse local files**.
 3. Extract the release zip into that folder, so you end up with `...\Age of Darkness - Final Stand\_ArcadeEndless\ArcadeEndless.exe`.
 4. Run `ArcadeEndless.exe`. It isn't code-signed, so Windows may say "Windows protected your PC": click **More info**, then **Run anyway**.
-5. Use the **Arcade Endless** tab, the **NightmarePOC** tab, or both, and press Install.
+5. Use the **Arcade Endless** tab, the **NightmarePOC** tab, or both, and press Install. No code needed: by default every setting is the game's own.
 6. Start a new game.
 
 To take it all off, press each tab's **Remove**. Steam's "Verify integrity of game files" also puts the original game back. A game update replaces the patched exe, so run the app and install again afterwards.
@@ -40,7 +40,7 @@ Step-by-step player guide: [`_ArcadeEndless/README_PLAYERS.txt`](_ArcadeEndless/
 
 ## Multiplayer
 
-The game runs every player's simulation in lockstep, so **everyone in a match needs exactly the same mods and settings**. Share your settings codes, have everyone install them, and compare the **match codes** in the top right of the app. Matching codes mean matching mods. Different codes mean the match will fall out of sync and end.
+The game runs every player's simulation in lockstep, so **everyone in a match needs exactly the same mods and settings**. If everyone keeps the defaults, everyone just presses Install. If the host changes settings, they share the settings code, and each player pastes it, presses **Load**, then installs. Either way, compare the **match codes** in the top right of the app. Matching codes mean matching mods. Different codes mean the match will fall out of sync and end.
 
 ## What's in this repository
 

@@ -60,6 +60,12 @@ MULTIPLAYER
 
 Every player needs the same mods with the same settings, or the match will
 fall out of sync.
+
+Keeping the defaults? Nobody needs a code: everyone just presses Install.
+Every setting starts at the game's own values (heroes keep their vanilla
+stats).
+
+Custom settings:
 1. The host picks settings, installs, and copies the settings code
    (Arcade Endless: on its tab, starts with AE2-. NightmarePOC: on its
    tab, under the tables, starts with NP1-).
