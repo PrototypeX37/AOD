@@ -27,6 +27,18 @@ function Test-Bytes($bytes, $at, $want) {
     return $true
 }
 
+# NightmarePOC's resource hotkey patch (tools\exe_patches.py) starts with this jump in UDebugUI::add_resources.
+# An exe that has it isn't the original, so it's never saved as the backup.
+$HotkeyAt = 0x144c150
+$HotkeyJump = [byte[]](0xE9, 0x1B, 0xEF, 0x00, 0x00)
+function Test-Hotkey($bytes) { ($bytes.Length -gt $HotkeyAt + 5) -and (Test-Bytes $bytes $HotkeyAt $HotkeyJump) }
+
+# NightmarePOC's map seeds patch stores Deserialize's result here in UMapGeneratorSubsystem::GenerateMap
+# (mov [rdi+4D0h],al; nop). Same rule: an exe with it is never saved as the backup.
+$SeedsAt = 0x11ce26c
+$SeedsStore = [byte[]](0x88, 0x87, 0xD0, 0x04, 0x00, 0x00, 0x90)
+function Test-Seeds($bytes) { ($bytes.Length -gt $SeedsAt + 7) -and (Test-Bytes $bytes $SeedsAt $SeedsStore) }
+
 function Find-Site($bytes) {
     $latin1 = [System.Text.Encoding]::GetEncoding(28591)    # 1 byte = 1 char, so string search finds byte patterns
     $text = $latin1.GetString($bytes)
@@ -67,8 +79,9 @@ if ($Command -eq "restore") {
     if (-not (Test-Path $Backup)) {
         throw "No backup at $Backup; nothing to restore. Steam's 'Verify integrity of game files' also puts the original exe back."
     }
-    $saved, $savedDays = Find-Site ([System.IO.File]::ReadAllBytes($Backup))
-    if ($null -ne $savedDays) { throw "$Backup isn't an unpatched game exe; not restoring it." }
+    $savedBytes = [System.IO.File]::ReadAllBytes($Backup)
+    $saved, $savedDays = Find-Site $savedBytes
+    if ($null -ne $savedDays -or (Test-Hotkey $savedBytes) -or (Test-Seeds $savedBytes)) { throw "$Backup isn't an unpatched game exe; not restoring it." }
     try { Copy-Item $Backup $Exe -Force } catch { throw "Can't write the exe. Close the game (and anything holding the file) and run this again." }
     Write-Output "Restored the original exe from $Backup."
     exit 0
@@ -89,7 +102,7 @@ switch ($Command) {
     }
     "install" {
         if ($days -eq $PatchDays) { Write-Output "Already $state."; break }
-        if ($null -eq $days -and -not (Same-File $Exe $Backup)) {
+        if ($null -eq $days -and -not (Test-Hotkey $bytes) -and -not (Test-Seeds $bytes) -and -not (Same-File $Exe $Backup)) {
             Copy-Item $Exe "$Backup.tmp" -Force
             Move-Item "$Backup.tmp" $Backup -Force
             Write-Output "Saved a backup of the original exe: $Backup"

@@ -23,6 +23,8 @@ Survival and multiplayer both change. The campaign is untouched, because the mod
 
 Double-click **`ArcadeEndless.exe`**. It's a normal Windows program with Python packed inside, so it needs nothing installed.
 
+It has two tabs, one per mod: **Arcade Endless** and **NightmarePOC**. Both are optional. Each tab has its own settings, **Install** and **Remove**, and only touches its own pak and its own exe patch, so you can run either mod without the other. The banner shows both mods' match codes and which exe patches are on.
+
 - **Location:** it has to sit inside the game folder. `_ArcadeEndless\` is where it lives, but it also works dropped straight into `...\steamapps\common\Age of Darkness - Final Stand\`. Anywhere else, it says it can't find the game.
 - **Windows warning:** the exe isn't code-signed, so the first time you run it Windows SmartScreen may say "Windows protected your PC". Click **More info**, then **Run anyway**. Some antivirus programs are also wary of unsigned packed Python programs.
 - **Running from Python:** `ArcadeEndless.pyw` is the same app as Python source. Double-click it instead if you have Python 3 installed.
@@ -43,12 +45,14 @@ The app is dressed in the game's own look. The logo, the Nightmare horde banner 
    - saves a **full backup of the original exe** (the first time), then patches the exe;
    - shows a **match code**.
 5. **"Remove"** deletes the pak and puts the original 6 bytes back in the exe. If that ever fails (for example, after a game update changed the exe), it offers to copy the full backup back instead.
-6. **NightmarePOC tab (optional).** NightmarePOC is a second mod by the same author:
-   - the Volatists can train Nightmares;
-   - heroes can be tuned;
+6. **The NightmarePOC tab.** NightmarePOC is a second mod by the same author:
+   - the Volatists can train Nightmares, at costs you set (gold, wood, stone, iron, food, population, train time, upkeep);
+   - heroes can be tuned, using their real stats;
+   - an optional **Numpad + resource hotkey** gives the player who presses it 10,000 food and villagers and fills their wood, stone, iron and essence, synced in multiplayer (an exe patch of its own);
+   - optional **multiplayer map seeds**: the host names the game `seed_12345` and the map is built for that seed, like Survival's seed box (an exe patch of its own; experimental, early test matches crashed or froze);
    - the hidden map-editor button comes back.
 
-   The tab explains it and installs or removes it on its own, separate from Arcade Endless. **Customise** sets each Nightmare's cost (gold, wood, stone, iron, food, population, train time, upkeep) and each hero's stats, shown as the hero's real values. It's built from your game's files like Arcade's pak, and its status shows in the banner. Details in `_NightmarePOC\README.md`.
+   It's built from your game's files like Arcade's pak. Details in `_NightmarePOC\README.md`.
 
 The banner and the bottom line show what's installed, whether it matches the settings on screen, and whether an exe backup exists. When you reopen the app, it loads the settings you installed.
 
@@ -268,6 +272,8 @@ python _ArcadeEndless\tools\make_release.py
 
 `make_release.py` packs the zip players get, `release\ArcadeEndless-<version>.zip`. It holds only `ArcadeEndless.exe` and the player guide (`README_PLAYERS.txt`, as `README.txt`), in an `_ArcadeEndless` folder so it extracts straight into the game folder. No pak goes in: the exe builds both mods from each player's own game files. It refuses an exe older than the code.
 
+`python _ArcadeEndless/tools/make_release.py friends [settings codes]` makes `release\PlayWithLunar-<match codes>.zip` for the people you play with: the app plus a "READ ME FIRST" guide carrying the settings code and match code of each mod installed on this PC, or of the `AE2-`/`NP1-` codes given (built and validated to get their match codes), and telling them to remove any mod that isn't in it, so their install comes out identical.
+
 Limits found in the exe:
 
 - **Day limit.** The day clock runs on day/seconds curves that cover the game's days 0-199 (counter Day 1-200) and wrap after that. So the patch prepares 190 days, and the Final Night can be at most day 186.
@@ -297,6 +303,7 @@ Limits found in the exe:
 | `dist\validate.log` | Output of the last command-line validation run |
 | `dist\installed_settings.txt` | Written by the app: the installed settings code and match code |
 | `tools\exe_patch.py` / `tools\exe_patch.ps1` | The exe patch: `status`, `install` (with backup), `remove`, `restore` |
+| `tools\exe_patches.py` | Both mods' exe patches (Arcade's days, NightmarePOC's hotkey and map seeds) and the backup rule: the backup is only ever taken from an unpatched exe. The same file as NightmarePOC's. |
 | `...\Win64\Achilles-Win64-Shipping.exe.arcade-backup` | The original exe, saved by the first install |
 | `tools\build_endless.py` | Builds the pak from the game's own pak (read-only), for any settings |
 | `tools\validate_endless.py` | Checks on a built pak |

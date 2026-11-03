@@ -13,6 +13,12 @@ Changes, all data-only, applied to both Survival and multiplayer constants:
   3. Heroes: Settings.heroes scales each playable hero's health, health regen, damage (melee and special attacks,
      plus the projectiles their ranged attack fires), armour shred, move speed and revive time, and can set their
      armour. By default every hero keeps the game's own stats.
+  4. Resource hotkey (Settings.hotkey, off by default): Numpad + gives the player who presses it 10,000 food and
+     villagers and fills their wood, stone, iron and essence, synced in multiplayer. That part is an exe patch
+     (tools/exe_patches.py, applied when NightmarePOC is installed); the pak only carries HOTKEY_MARKER, so the match
+     code tells hotkey and no-hotkey installs apart.
+  5. Multiplayer map seeds (Settings.seeds, off by default): the host names the game "seed_<text>" and the map is
+     generated live from that seed, like Survival's. Also an exe patch; the pak carries SEEDS_MARKER the same way.
 
 Settings travel as "NP1-" codes: zlib + base64 JSON of what differs from the defaults.
 
@@ -31,6 +37,7 @@ from dataclasses import dataclass
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import exe_patches  # noqa: E402
 import kismet  # noqa: E402
 import menu_credit  # noqa: E402
 import pak  # noqa: E402
@@ -117,13 +124,22 @@ HERO_LEVEL = 10  # the level hero_game_values reads: the top one, where every he
 MULT_RANGE = (0.05, 20.0)
 ARMOUR_MAX = 1000.0
 CODE_PREFIX = "NP1-"
+HOTKEY_MARKER = "Achilles/Content/Mods/NightmarePOC/ResourceHotkey.txt"
+HOTKEY_MARKER_TEXT = (f"NightmarePOC resource hotkey v{exe_patches.HOTKEY_VERSION}: Numpad +. The exe patch is in "
+                      "tools/exe_patches.py; its version is here so the match code changes with it.\n").encode()
+SEEDS_MARKER = "Achilles/Content/Mods/NightmarePOC/MapSeeds.txt"
+SEEDS_MARKER_TEXT = (f"NightmarePOC multiplayer map seeds v{exe_patches.SEEDS_VERSION}: name the game \"seed <text>\". "
+                     "The exe patch is in tools/exe_patches.py; every player needs it, so it's in the match code.\n").encode()
 
 
 @dataclass(frozen=True)
 class Settings:
-    """units: one UNIT_FIELDS tuple per UNIT_ORDER unit. heroes: one HERO_FIELDS tuple per HEROES hero."""
+    """units: one UNIT_FIELDS tuple per UNIT_ORDER unit. heroes: one HERO_FIELDS tuple per HEROES hero.
+    hotkey: the Numpad + resource hotkey (an exe patch). seeds: multiplayer map seeds (an exe patch)."""
     units: tuple = tuple(DEFAULT_UNITS[u] for u in UNIT_ORDER)
     heroes: tuple = tuple(DEFAULT_HEROES[h] for h in HEROES)
+    hotkey: bool = False
+    seeds: bool = False
 
     def unit(self, name):
         return dict(zip(UNIT_FIELDS, self.units[UNIT_ORDER.index(name)]))
@@ -135,6 +151,10 @@ class Settings:
         d = Settings()
         data = {"u": {n: list(v) for n, v, dv in zip(UNIT_ORDER, self.units, d.units) if v != dv},
                 "h": {n: list(v) for n, v, dv in zip(HEROES, self.heroes, d.heroes) if v != dv}}
+        if self.hotkey:
+            data["k"] = True
+        if self.seeds:
+            data["s"] = True
         raw = zlib.compress(json.dumps(data, separators=(",", ":")).encode(), 9)
         return CODE_PREFIX + base64.urlsafe_b64encode(raw).decode().rstrip("=")
 
@@ -149,9 +169,10 @@ class Settings:
             d = cls()
             units = tuple(tuple(data.get("u", {}).get(n, dv)) for n, dv in zip(UNIT_ORDER, d.units))
             heroes = tuple(tuple(data.get("h", {}).get(n, dv)) for n, dv in zip(HEROES, d.heroes))
+            hotkey, seeds = data.get("k", False), data.get("s", False)
         except Exception as ex:
             raise ValueError(f"damaged settings code ({ex})") from None
-        return cls(units, heroes).checked()
+        return cls(units, heroes, hotkey, seeds).checked()
 
     def checked(self):
         """self, or ValueError naming the first value out of range."""
@@ -173,6 +194,9 @@ class Settings:
                 lo, hi = (0.0, ARMOUR_MAX) if field == "armour" else MULT_RANGE
                 if type(x) not in (int, float) or not lo <= x <= hi:
                     raise ValueError(f"{name} {field}: {x!r} isn't a number from {lo:g} to {hi:g}")
+        for name, x in (("hotkey", self.hotkey), ("seeds", self.seeds)):
+            if type(x) is not bool:
+                raise ValueError(f"{name}: {x!r} isn't true or false")
         return self
 
 
@@ -598,6 +622,12 @@ def main(out=OUT_PAK, base_pak=BASE_PAK, settings=None):
     patch_unit_list(b)
     print("Heroes:")
     patch_heroes(b, s)
+    if s.hotkey:
+        b.out[HOTKEY_MARKER] = HOTKEY_MARKER_TEXT
+        print(f"Resource hotkey: on ({HOTKEY_MARKER}; the exe patch is applied on install)")
+    if s.seeds:
+        b.out[SEEDS_MARKER] = SEEDS_MARKER_TEXT
+        print(f"Multiplayer map seeds: on ({SEEDS_MARKER}; the exe patch is applied on install)")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     pak.write_pak(out, sorted(b.out.items()), seed=pak.path_hash("nightmarepoc_p.pak", 0) & 0xFFFFFFFF)
     print(f"Wrote {os.path.abspath(out)} ({len(b.out)} files, {os.path.getsize(out)} bytes)")

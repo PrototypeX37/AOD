@@ -157,7 +157,14 @@ def main(pak_path=bm.OUT_PAK, base_pak=bm.BASE_PAK, settings=None):
     data = {p: mod.read(p) for p in mod.files}  # read() verifies each entry's SHA-1
     check(True, "every entry's data hash matches its header")
 
-    packages = sorted({p.rsplit(".", 1)[0] for p in mod.files})
+    print("Resource hotkey:")
+    check((bm.HOTKEY_MARKER in mod.files) == s.hotkey and (not s.hotkey or mod.read(bm.HOTKEY_MARKER) == bm.HOTKEY_MARKER_TEXT),
+          f"marker {'present' if s.hotkey else 'absent'}, as the settings say (hotkey {'on' if s.hotkey else 'off'})")
+    print("Multiplayer map seeds:")
+    check((bm.SEEDS_MARKER in mod.files) == s.seeds and (not s.seeds or mod.read(bm.SEEDS_MARKER) == bm.SEEDS_MARKER_TEXT),
+          f"marker {'present' if s.seeds else 'absent'}, as the settings say (seeds {'on' if s.seeds else 'off'})")
+
+    packages = sorted({p.rsplit(".", 1)[0] for p in mod.files if p.endswith((".uasset", ".uexp"))})
     print("Packages:")
     for path in packages:
         p = pkg_from(mod, path)

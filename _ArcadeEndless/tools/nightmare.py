@@ -9,6 +9,7 @@ import os
 import sys
 
 import exe_patch
+import exe_patches
 import home
 
 TOOLS = home.NIGHTMARE_TOOLS
@@ -25,6 +26,7 @@ BASE_PAK = os.path.join(home.GAME, home.GAME_PAK)
 OUT_PAK = os.path.join(home.DIST, "NightmarePOC_P.pak")
 INSTALLED = os.path.join(os.path.dirname(exe_patch.MOD_PAK), "NightmarePOC_P.pak")
 INSTALLED_SETTINGS = os.path.join(home.DIST, "nightmare_settings.txt")  # "<settings code> <match code>"
+LAST_SETTINGS = os.path.join(home.DIST, "nightmare_last_settings.txt")  # the last code installed; Remove keeps it
 BUILDINGS = {"BARRACKS_T0": "Barracks", "WORKSHOP_T2": "Siege Workshop"}
 HOTKEYS = "QWERASDFZXCV"  # the command card's 4x3 grid, by button_index
 
@@ -36,6 +38,16 @@ def build(settings, out=OUT_PAK):
 def check(settings, path=OUT_PAK):
     """0 if every check passes."""
     return validate.main(path, BASE_PAK, settings)
+
+
+def set_hotkey(on):
+    """Turn the Numpad + resource hotkey exe patch on or off (exe_patches.PatchError if it can't)."""
+    return exe_patches.set_hotkey(exe_patch.EXE, on)
+
+
+def set_seeds(on):
+    """Turn the multiplayer map seeds exe patch on or off (exe_patches.PatchError if it can't)."""
+    return exe_patches.set_seeds(exe_patch.EXE, on)
 
 
 def defaults():
@@ -51,6 +63,15 @@ def installed_settings():
     except (OSError, ValueError, NameError):
         pass
     return None
+
+
+def last_settings():
+    """The settings last installed through this app, even if NightmarePOC has since been removed or deleted, so a
+    fresh install starts from them rather than the defaults."""
+    try:
+        return build_mod.Settings.from_code(open(LAST_SETTINGS).read().strip())
+    except (OSError, ValueError, NameError):
+        return None
 
 
 def unit_label(unit):
@@ -95,7 +116,7 @@ def describe(s):
     d = build_mod.Settings()
     units = [unit_label(n) for n, a, b in zip(build_mod.UNIT_ORDER, s.units, d.units) if a != b]
     heroes = [n for n, a, b in zip(build_mod.HEROES, s.heroes, d.heroes) if a != b]
-    if not units and not heroes:
-        return "the defaults"
     parts = ([f"costs for {', '.join(units)}"] if units else []) + ([f"stats for {', '.join(heroes)}"] if heroes else [])
-    return "custom " + " and ".join(parts)
+    extras = "".join(text for on, text in ((s.hotkey, " and the resource hotkey"), (s.seeds, " and multiplayer map seeds"))
+                     if on)
+    return ("custom " + " and ".join(parts) if parts else "the defaults") + extras

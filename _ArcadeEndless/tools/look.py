@@ -92,6 +92,7 @@ class Look:
         s.configure("Muted.TLabel", foreground=C.muted, font=f["small"])
         s.configure("Section.TLabel", foreground=C.veil, font=f["section"])
         s.configure("Value.TLabel", foreground=C.veil, font=f["bold"])
+        s.configure("Notice.TLabel", background=C.bg, foreground=C.veil, font=f["bold"])  # "Installed", on the window background
         s.configure("Summary.TLabel", foreground=C.text, font=f["body"])
         s.configure("TSeparator", background=C.line)
 
@@ -99,6 +100,12 @@ class Look:
         s.configure("TNotebook.Tab", background=C.panel2, foreground=C.muted, padding=(self.px(14), self.px(6)),
                     font=f["tab"], borderwidth=0, lightcolor=C.panel2, bordercolor=C.line)
         s.map("TNotebook.Tab", background=[("selected", C.panel)], foreground=[("selected", C.veil)],
+              lightcolor=[("selected", C.veil)])
+        # the two mods' tabs at the top of the window: bigger, on the window background
+        s.configure("Mods.TNotebook", background=C.bg, borderwidth=0, tabmargins=(self.px(16), 0, self.px(16), 0))
+        s.configure("Mods.TNotebook.Tab", background=C.panel2, foreground=C.muted, padding=(self.px(22), self.px(9)),
+                    font=f["section"], borderwidth=0, lightcolor=C.panel2, bordercolor=C.line)
+        s.map("Mods.TNotebook.Tab", background=[("selected", C.panel)], foreground=[("selected", C.veil)],
               lightcolor=[("selected", C.veil)])
 
         s.configure("TButton", background=C.panel2, foreground=C.text, bordercolor=C.line, lightcolor=C.panel2,

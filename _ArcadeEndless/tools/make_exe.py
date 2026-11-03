@@ -24,21 +24,21 @@ BUILD = os.path.join(home.MOD, "build")
 EXE = os.path.join(home.MOD, "ArcadeEndless.exe")
 ICON_SIZES = [(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
 NIGHTMARE_TOOLS = home.NIGHTMARE_TOOLS
-SHARED = ("pak.py", "ue_pkg.py", "menu_credit.py")  # in both mods' tools; the exe holds one copy of each
+SHARED = ("pak.py", "ue_pkg.py", "menu_credit.py", "exe_patches.py")  # in both mods' tools; the exe holds one copy of each
 AUTHOR = "Lunar (76561198073513480)"
 VERSION_INFO = f"""VSVersionInfo(
-  ffi=FixedFileInfo(filevers=(1, 0, 0, 0), prodvers=(1, 0, 0, 0), mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1,
+  ffi=FixedFileInfo(filevers=(1, 1, 0, 0), prodvers=(1, 1, 0, 0), mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1,
                     subtype=0x0, date=(0, 0)),
   kids=[
     StringFileInfo([StringTable('040904B0', [
       StringStruct('CompanyName', 'Lunar'),
       StringStruct('FileDescription', 'Arcade Endless for Age of Darkness: Final Stand'),
-      StringStruct('FileVersion', '1.0.0.0'),
+      StringStruct('FileVersion', '1.1.0.0'),
       StringStruct('InternalName', 'ArcadeEndless'),
       StringStruct('LegalCopyright', 'Created by {AUTHOR}'),
       StringStruct('OriginalFilename', 'ArcadeEndless.exe'),
       StringStruct('ProductName', 'Arcade Endless'),
-      StringStruct('ProductVersion', '1.0.0.0')])]),
+      StringStruct('ProductVersion', '1.1.0.0')])]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]
 )

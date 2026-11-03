@@ -14,12 +14,19 @@ Arcade Endless
 NightmarePOC (optional, separate)
   - The Volatists can train 8 Nightmares (Crawlers up to Crushers) at the
     Barracks and Siege Workshop.
-  - Customise what each Nightmare costs, and each hero's stats.
+  - Set what each Nightmare costs, and each hero's stats.
+  - Optional Numpad + hotkey: gives you (only you) +10,000 food and
+    villagers and fills your wood, stone, iron and essence. Works in
+    multiplayer when everyone has the same settings.
+  - Optional multiplayer map seeds: the host names the game
+    "seed_12345" (letters, digits and _ only) and everyone gets that
+    seed's map. Experimental: early test matches crashed or froze.
   - The main menu's hidden map/mission Editor button comes back (the
     developers' own tool, rough edges included).
   This one is experimental: it hasn't had much play yet.
 
-Both are installed, changed and removed from one program, ArcadeEndless.exe.
+Both are optional: install either or both. Each has its own tab in one
+program, ArcadeEndless.exe, with its own Install and Remove.
 It builds the mods from your own game files, so nothing is downloaded. The
 campaign isn't touched.
 
@@ -34,16 +41,19 @@ INSTALL
    (It must be inside the game folder, or it can't find the game.)
 4. Run ArcadeEndless.exe. It isn't code-signed, so Windows may say "Windows
    protected your PC": click More info, then Run anyway.
-5. Pick a preset (or your own settings) and press Build & install.
-6. Optional: open the NightmarePOC tab, press Customise... if you want to
-   change costs or hero stats, then Install NightmarePOC.
+5. Arcade Endless tab: pick a preset (or your own settings) and press
+   Build & install Arcade Endless.
+6. NightmarePOC tab: change costs, hero stats, the hotkey or map seeds,
+   then press Install NightmarePOC.
+   (Do either step, or both.)
 7. Start a NEW game. Settings apply to new games only; a save keeps the
    waves it started with.
 
-The app puts its mod files in Achilles\Content\Paks\~mods. Arcade Endless
-also changes 6 bytes in the game exe (so the game prepares waves for the
-longer run). Before changing it, the app saves a full copy of the original
-exe next to it, as Achilles-Win64-Shipping.exe.arcade-backup.
+The app puts its mod files in Achilles\Content\Paks\~mods. Two things also
+change the game exe: Arcade Endless (6 bytes, so the game prepares waves
+for the longer run) and NightmarePOC's hotkey and map seeds, if you turn them on. Before
+the first change, the app saves a full copy of the original exe next to it,
+as Achilles-Win64-Shipping.exe.arcade-backup.
 
 
 MULTIPLAYER
@@ -51,22 +61,23 @@ MULTIPLAYER
 Every player needs the same mods with the same settings, or the match will
 fall out of sync.
 1. The host picks settings, installs, and copies the settings code
-   (Arcade Endless: on the left, starts with AE2-. NightmarePOC: in its
-   Customise window, starts with NP1-).
+   (Arcade Endless: on its tab, starts with AE2-. NightmarePOC: on its
+   tab, under the tables, starts with NP1-).
 2. Each friend installs the app the same way, pastes the code, presses
    Load, then installs.
 3. Compare the match codes at the top right of the app: they must be the
    same for everyone.
 
-The exe patch alone can desync a normal (unmodded) multiplayer match with
-players who don't have it. Press Remove before playing vanilla multiplayer.
+Arcade's exe patch alone can desync a normal (unmodded) multiplayer match
+with players who don't have it. Press Remove before playing vanilla
+multiplayer.
 
 
 REMOVE
 
-Use the app: Remove (Arcade Endless) and the NightmarePOC tab's Remove.
-That deletes the mod files and puts the original exe back. Remove mods
-between matches, not in the middle of a saved game.
+Use the app: each tab's Remove. That deletes that mod's files and takes its
+change out of the game exe. Remove mods between matches, not in the middle
+of a saved game.
 Without the app: delete the two _P.pak files in Achilles\Content\Paks\~mods,
 then in Steam use Properties > Installed Files > Verify integrity of game
 files to restore the exe.
